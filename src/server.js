@@ -1,10 +1,14 @@
 const express = require('express');
+const cors = require ('cors');
 const app = express();
 
 const PORT = process.env.PORT || 8000;
 
-app.get('/', (res, req)=>{
-    res.setEncoding('Hello from express');
+app.use(cors());
+app.use (express.json());
+
+app.get('/', (req, res)=>{
+    res.send('Hello from express');
 })
 
 app.listen(PORT, ()=> {
