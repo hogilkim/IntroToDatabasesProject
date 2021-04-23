@@ -11,8 +11,10 @@ routes.get('/status', (req, res)=>{
 routes.post('/user/customer/register', CustomerController.createCustomer);
 routes.get('/user/:customerID', CustomerController.getCustomerById);
 
+//AirlineStaffController
 routes.post('/airport/new', AirlineStaffController.createAirport);
 routes.post('/airline/new', AirlineStaffController.createAirline);
 routes.post('/airplane/new', AirlineStaffController.createAirplane);
+routes.post('/flight/new', AirlineStaffController.createFlight);
 
 module.exports = routes;
