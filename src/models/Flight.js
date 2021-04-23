@@ -9,7 +9,7 @@ const FlightSchema = new mongoose.Schema({
     arrival_airport: String,
     arrival_time: String,
     arrival_date: Date,
-    base_price: String,
+    base_price: Number,
     airplane_id: String,
     status: String,
 });
