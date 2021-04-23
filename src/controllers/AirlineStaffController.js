@@ -1,6 +1,7 @@
 const Airport = require('../models/Airport');
 const Airline = require('../models/Airline');
 const Airplane = require('../models/Airplane');
+const Flight = require('../models/Flight');
 
 module.exports ={
     async createAirport(req, res){
@@ -45,8 +46,8 @@ module.exports ={
 
     async createAirplane(req, res){
         try {
-            const { airplane_id, airline_name, seats } = req.body;
-            // const { airline_id } = req.headers;
+            const { airplane_id, seats } = req.body;
+            const { airline_name } = req.headers;
             const existentAirline = await Airline.findOne({airline_name});
 
             if (!existentAirline){
@@ -60,6 +61,43 @@ module.exports ={
             return res.json(airplane);
         } catch (error) {
             throw Error(`Error while creating new airplane: ${error}`);
+        }
+    },
+
+    async createFlight(req, res){
+        try {
+            const { flight_number, depart_time, depart_date, arrival_time, 
+                arrival_date, base_price, status, depart_airport, arrival_airport, airplane_id} = req.body
+            const { airline_name } = req.headers;
+            console.log(airplane_id);
+            const existentAirline = await Airline.findOne({airline_name});
+            const existentDepartureAirport = await Airport.findOne({airport_name: depart_airport});
+            const existentArrivalAirport = await Airport.findOne({airport_name: arrival_airport});
+            const existentPlane = await Airplane.findOne({airplane_id});
+
+            if(!existentAirline){
+                return res.status(400).json({message: `No Such Airline!`})
+            }
+            if(!existentDepartureAirport){
+                return res.status(400).json({message: `No Such Departure Airport!`})
+            }
+            if(!existentArrivalAirport){
+                return res.status(400).json({message: `No Such Arrival Airport!`})
+            }
+            if(!existentPlane){
+                return res.status(400).json({message: `No Such Plane!`})
+            }
+
+            const flight = await Flight.create({
+                flight_number, depart_time, depart_date, arrival_time, 
+                arrival_date, base_price: parseFloat(base_price), 
+                status, airline_name, depart_airport, arrival_airport, airplane_id
+            })
+            return res.json(flight);
+
+
+        } catch (error) {
+            throw Error(`Error while creating new flight: ${error}`);
         }
     }
 }
