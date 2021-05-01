@@ -2,7 +2,7 @@ const express = require("express");
 const routes = express.Router();
 const CustomerController = require('./controllers/CustomerController');
 const AirlineStaffController = require('./controllers/AirlineStaffController');
-
+const WebServiceController = require('./controllers/WebServiceController');
 
 routes.get('/status', (req, res)=>{
     res.send({stats: 200});
@@ -17,5 +17,10 @@ routes.post('/airline/new', AirlineStaffController.createAirline);
 routes.post('/airplane/new', AirlineStaffController.createAirplane);
 routes.post('/flight/new', AirlineStaffController.createFlight);
 routes.post('/staff/new', AirlineStaffController.createStaff);
+
+//WebServiceController
+routes.post('/agent/new', WebServiceController.createBookingAgent);
+routes.post('/ticket/new', WebServiceController.createTicket);
+
 
 module.exports = routes;

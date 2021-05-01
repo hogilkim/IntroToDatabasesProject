@@ -3,9 +3,9 @@ const Airline = require('../models/Airline');
 const Airplane = require('../models/Airplane');
 const Flight = require('../models/Flight');
 const AirlineStaff = require('../models/AirlineStaff');
+const Customer = require('../models/Customer');
 
 const bcrypt = require('bcrypt');
-const Customer = require('../models/Customer');
 
 module.exports ={
     async createStaff(req, res){
