@@ -16,5 +16,6 @@ routes.post('/airport/new', AirlineStaffController.createAirport);
 routes.post('/airline/new', AirlineStaffController.createAirline);
 routes.post('/airplane/new', AirlineStaffController.createAirplane);
 routes.post('/flight/new', AirlineStaffController.createFlight);
+routes.post('/staff/new', AirlineStaffController.createStaff);
 
 module.exports = routes;

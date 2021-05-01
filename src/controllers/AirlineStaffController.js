@@ -2,8 +2,45 @@ const Airport = require('../models/Airport');
 const Airline = require('../models/Airline');
 const Airplane = require('../models/Airplane');
 const Flight = require('../models/Flight');
+const AirlineStaff = require('../models/AirlineStaff');
+
+const bcrypt = require('bcrypt');
+const Customer = require('../models/Customer');
 
 module.exports ={
+    async createStaff(req, res){
+        try {
+            console.log(req.body);
+            const {staff_username, staff_password, first_name, last_name, date_of_birth, staff_phone} = req.body;
+            const {airline_name} = req.headers;
+            const existentStaff = await AirlineStaff.findOne({staff_username});
+            const existentAirline = await Airline.findOne({airline_name});
+
+            if(!existentAirline){
+                return res.status(400).json({message: `No Such Airline!`});
+            }
+
+            if (!existentStaff) {
+                const hashedPassword = await bcrypt.hash(staff_password, 10);
+                const airlineStaff = AirlineStaff.create({
+                    staff_username,
+                    staff_password : hashedPassword,
+                    first_name,
+                    last_name,
+                    date_of_birth,
+                    staff_phone,
+                    airline_name
+                });
+                return res.json(airlineStaff);
+            }
+            return res.status(400).json({
+                message:`staff already exists! do you want to login instead?`
+            });
+        } catch(error){
+        throw Error(`Error while registering a new user: ${error}`);
+        }
+    },
+
     async createAirport(req, res){
         try {
             const { airport_name, city } = req.body;
