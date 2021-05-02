@@ -13,7 +13,12 @@ const RateSchema = new mongoose.Schema({
         type:String,
         ref: "Customer"
    },
-   rate : Number,
+   rate : {
+       type: Number,
+       min: 0,
+       max: 5,
+       required: true
+   },
    comment: String
 });
 

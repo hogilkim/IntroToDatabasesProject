@@ -21,6 +21,8 @@ routes.post('/staff/new', AirlineStaffController.createStaff);
 //WebServiceController
 routes.post('/agent/new', WebServiceController.createBookingAgent);
 routes.post('/ticket/new', WebServiceController.createTicket);
+routes.post('/transaction/new', WebServiceController.createTransaction);
+routes.post('/rating/new', WebServiceController.createRate);
 
 
 module.exports = routes;

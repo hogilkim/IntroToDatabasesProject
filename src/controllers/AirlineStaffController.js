@@ -22,7 +22,7 @@ module.exports ={
 
             if (!existentStaff) {
                 const hashedPassword = await bcrypt.hash(staff_password, 10);
-                const airlineStaff = AirlineStaff.create({
+                const airlineStaff = await AirlineStaff.create({
                     staff_username,
                     staff_password : hashedPassword,
                     first_name,
@@ -48,7 +48,7 @@ module.exports ={
             const existentAirport = await Airport.findOne({airport_name});
     
             if(!existentAirport){
-                const airport = Airport.create({
+                const airport = await Airport.create({
                     airport_name,
                     city
                 });
