@@ -136,5 +136,15 @@ module.exports ={
         } catch (error) {
             throw Error(`Error while creating new flight: ${error}`);
         }
+    }, 
+
+    async deleteFlight(req, res){
+        const {flightID} = req.params;
+        try {
+            await Flight.findByIdAndDelete(flightID);
+            return res.status(204).send()
+        } catch (error) {
+            throw Error(`Error while deleting flight: ${error}`);
+        }
     }
 }

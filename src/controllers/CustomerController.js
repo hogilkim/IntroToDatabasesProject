@@ -1,4 +1,5 @@
 const Customer = require('../models/Customer');
+const Ticket = require('../models/Ticket')
 
 const bcrypt = require('bcrypt');
 module.exports = {
@@ -48,6 +49,21 @@ module.exports = {
             return res.status(400).json({
                 message: `Customer ID does not exist, Do you want to register instead?`
             });
+        }
+    },
+
+    async getCustomerTicketById(req, res){
+        const {ticketID} = req.params;
+
+        try {
+            const ticket = await Ticket.findById(ticketID);
+            if (ticket) {
+                return res.json(ticket);
+            } else {
+                return res.status(400).json({ message: `Ticket ID does not exist!` });         
+            }
+        } catch (error){
+            throw Error(`Error while finding ticket by id`);
         }
     }
 

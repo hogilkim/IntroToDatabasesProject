@@ -8,40 +8,21 @@ const Rate = require('../models/Rate');
 const bcrypt = require('bcrypt');
 
 module.exports ={
-    async createBookingAgent(req, res){
-        try {
-            console.log(req.body);
-            const {agent_ID, agent_email, agent_password} = req.body;
-            const existentAgent = await BookingAgent.findOne({agent_ID});
-
-            if(!existentAgent){
-                const hashedPassword = await bcrypt.hash(agent_password, 10);
-                const bookingAgent = await BookingAgent.create({
-                    agent_ID,
-                    agent_email,
-                    agent_password : hashedPassword
-                });
-                return res.json(bookingAgent);
-            } 
-            return res.status(400).json({
-                message:`agent already exists! do you want to login instead?`
-            });
-        } catch (error){
-            throw Error(`Error while registering a new agent: ${error}`);
-        }
-    },
     async createTicket (req, res){
         try {
             console.log(req.body);
-            const {ticket_ID, customer_email, airline_name, sold_price, card_type,card_num, 
+            const {ticket_ID, customer_email, flight_number, airline_name, sold_price, card_type,card_num, 
                 name_on_card, expiration_date } = req.body;
-            const { flight_number } = req.headers;
-
+            
+            const {customer_ID} = req.params;
+            console.log(ticket_ID, customer_email, customer_ID);
+            
             const existentFlight = await Flight.findOne({flight_number});
             var current = new Date();
             if(existentFlight){
                 const newTicket = await Ticket.create({
                     ticket_ID,
+                    customer:customer_ID,
                     customer_email,
                     airline_name, 
                     flight_number,
@@ -53,6 +34,11 @@ module.exports ={
                     purchase_date : current.getHours(),
                     purchase_time : current.getMinutes()
                 });
+
+                await newTicket
+                    .populate('customer','-customer_password')
+                    .execPopulate();
+
                 return res.json(newTicket);
             }
             return res.status(400).json({
@@ -60,6 +46,21 @@ module.exports ={
             });
         } catch (error) {
             throw Error(`Error while creating a new ticket: ${error}`);
+        }
+    },
+
+    async getTicket(req, res){
+        const {ticket_id} = req.params;
+        try {
+            const ticket = await Ticket.findById(ticket_id);
+            
+            await ticket
+                    .populate('customer','-customer_password')
+                    .execPopulate();
+
+            return res.json(ticket);
+        } catch (error) {
+            return res.status(400).json({ message: `Error while finding ticket`});
         }
     },
     async createTransaction (req, res){
@@ -115,5 +116,16 @@ module.exports ={
         } catch (error) {
             throw Error(`Error while creating new Rating ${error}`);
         }
-    }    
+    },
+    async getAllFlights(req, res){
+        try{
+            const flights = await Flight.find({});
+
+            if (flights){
+                return res.json(flights);
+            }
+        } catch (error){
+            return res.status(400).json({ message: `We do have any events yet` });
+        }
+    }
 }

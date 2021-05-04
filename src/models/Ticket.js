@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 
 const TicketSchema = new mongoose.Schema({
    ticket_ID: String,
-   customer_email:{
-       type: String,
-       ref: "Customer"
-   },
+   customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Customer"
+    },
+   customer_email: String,
    airline_name: {
        type: String,
        ref: "Airline"
