@@ -1,26 +1,44 @@
 import React, {useState} from 'react';
 import api from '../../services/api'
-import { Container, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 
 
 export default function Login( {history} ){
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("")
 
     const handleSubmit = async evt=>{
       evt.preventDefault();
-      console.log('result of submit', email, password);
 
-      const response = await api.post('/user/customer/login',{ email, password});
-      const customer_object_id = response.data.customer_email || false;
+      try {
+        if(email !== "" && password !== ""){
+          const response = await api.post('/user/customer/login',{ email, password });
+          const customer_object_id = response.data._id || false;
+    
+          if (customer_object_id){
+            localStorage.setItem('customer', customer_object_id);
+            history.push('/dashboard')
+          } else {
+            const {message} = response.data;
+            console.log(message);
+          }
+        } else {
+          setError(true);
+          setErrorMessage("You need to fill all the inputs");
+          setTimeout(()=>{
+            setError(false);
+            setErrorMessage("");
+          }, 2000);
+        }
 
-      if (customer_object_id){
-        localStorage.setItem('customer', customer_object_id);
-        history.push('/dashboard')
-      } else {
-        const {message} = response.data;
-        console.log(message);
+        
+      } catch (error) {
+        Promise.reject(error);
+        console.log(error);
       }
+
     }
 
     return (
@@ -28,16 +46,24 @@ export default function Login( {history} ){
         <h2>Login:</h2>
         <p>Please<strong>Login</strong> to your account</p>
         <Form onSubmit={handleSubmit}>
-          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-            <Label for="exampleEmail" className="mr-sm-2">Email</Label>
-            <Input type="email" name="email" id="exampleEmail" placeholder="cs3083@nyu.edu" onChange={evt=>setEmail(evt.target.value)}/>
+          <div className="input-group">
+            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+              <Input type="email" name="email" id="exampleEmail" placeholder="Your Email" onChange={evt=>setEmail(evt.target.value)}/>
+            </FormGroup>
+            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+              <Input type="password" name="password" id="examplePassword" placeholder="Password" onChange={evt=>setPassword(evt.target.value)}/>
+            </FormGroup>
+          </div>
+          <FormGroup>
+            <Button className ="submit-btn">Submit</Button>
           </FormGroup>
-          <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-            <Label for="examplePassword" className="mr-sm-2">Password</Label>
-            <Input type="password" name="password" id="examplePassword" placeholder="Password" onChange={evt=>setPassword(evt.target.value)}/>
+          <FormGroup>
+            <Button className ="secondary-btn" onClick={()=>history.push('/user/customer/register')}>New Account</Button>
           </FormGroup>
-          <Button>Submit</Button>
         </Form>
+        {error?(
+          <Alert className="event-validation" color="danger">{errorMessage}</Alert>
+        ): ""}
       </Container>
       );
 }

@@ -7,7 +7,9 @@ function App() {
   return (
     <Container>
       <h1>Airline ticket reservation system</h1>
-      <Routes/>
+      <div className="content">
+        <Routes/>
+      </div>
     </Container>
   );
 }
