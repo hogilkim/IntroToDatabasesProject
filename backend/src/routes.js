@@ -11,7 +11,8 @@ routes.get('/status', (req, res)=>{
 })
 
 //LoginController
-routes.get('/user/customer/login', LoginController.customerLogin);
+routes.post('/user/customer/login', LoginController.customerLogin);
+
 
 //CustomerController
 routes.post('/user/customer/register', CustomerController.createCustomer);

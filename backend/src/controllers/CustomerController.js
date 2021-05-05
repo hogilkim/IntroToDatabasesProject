@@ -14,7 +14,7 @@ module.exports = {
 
                 if(!existentCustomer){
                     const hashedPassword = await bcrypt.hash(customer_password, 10);
-                    const customer = Customer.create({
+                    const newCustomer = Customer.create({
                         customer_name,
                         customer_email,
                         customer_password: hashedPassword,
@@ -28,7 +28,10 @@ module.exports = {
                         passport_country,
                         date_of_birth
                     });
-                    return res.json(customer);
+                    const response = {
+                        customer_email
+                    }
+                    return res.json(response);
                 }
                 return res.status(400).json({
                     message: `email/user already exist! do you want to login instead?`

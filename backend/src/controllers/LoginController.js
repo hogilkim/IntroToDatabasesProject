@@ -27,8 +27,11 @@ module.exports = {
                     passport_country : customer.passport_country,
                     date_of_birth: customer.date_of_birth
                 }
-                console.log("here")
                 return res.json(customerResponse);
+            } else {
+                return res.status(400).json({
+                    message:`Customer not found! Do you want to register instead?`
+                });
             }
         } catch (error) {
             throw Error(`Error while Authenticating user ${error}`);

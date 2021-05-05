@@ -3,13 +3,24 @@ import api from '../../services/api'
 import { Container, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 
-export default function Login(){
+export default function Login( {history} ){
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSubmit = async evt=>{
       evt.preventDefault();
       console.log('result of submit', email, password);
+
+      const response = await api.post('/user/customer/login',{ email, password});
+      const customer_object_id = response.data.customer_email || false;
+
+      if (customer_object_id){
+        localStorage.setItem('customer', customer_object_id);
+        history.push('/dashboard')
+      } else {
+        const {message} = response.data;
+        console.log(message);
+      }
     }
 
     return (
