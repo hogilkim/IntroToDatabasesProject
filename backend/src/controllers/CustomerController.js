@@ -56,12 +56,12 @@ module.exports = {
     },
 
     async getCustomerTicketById(req, res){
-        const {ticketID} = req.params;
+        const {customer} = req.params;
 
         try {
-            const ticket = await Ticket.findById(ticketID);
-            if (ticket) {
-                return res.json(ticket);
+            const customerInTickets = await Ticket.find(customer);
+            if (customerInTickets) {
+                return res.json(customerInTickets);
             } else {
                 return res.status(400).json({ message: `Ticket ID does not exist!` });         
             }

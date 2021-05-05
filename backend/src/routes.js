@@ -17,7 +17,7 @@ routes.post('/user/customer/login', LoginController.customerLogin);
 //CustomerController
 routes.post('/user/customer/register', CustomerController.createCustomer);
 routes.get('/user/:customerID', CustomerController.getCustomerById);
-routes.get('/ticket/:ticketID', CustomerController.getCustomerTicketById);
+routes.get('/ticket/:customer_id', CustomerController.getCustomerTicketById); //! working on this
 
 //AirlineStaffController
 routes.post('/airport/new', AirlineStaffController.createAirport);

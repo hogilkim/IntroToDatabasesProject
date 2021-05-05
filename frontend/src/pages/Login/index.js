@@ -19,7 +19,7 @@ export default function Login( {history} ){
     
           if (customer_object_id){
             localStorage.setItem('customer', customer_object_id);
-            history.push('/dashboard')
+            history.push('/MyTickets')
           } else {
             const {message} = response.data;
             console.log(message);
